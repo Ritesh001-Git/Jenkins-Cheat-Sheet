@@ -21,7 +21,7 @@ Regardless of the tool you use, the "Universal Workflow" follows these steps:
 
 ## What is Jenkins and why are we using it?
 
-Jenkins is an open-source Automation Server.
+Jenkins is an open-source automation server that automates various stages of the software development lifecycle. It supports building, testing, and deploying applications across multiple environments, making it a critical component in CI/CD pipelines.
 
 ### Why use it?
 Before Jenkins, a developer had to manually compile code, manually run tests on their machine, and manually FTP files to a server. Jenkins "listens" for changes and does all of this for you.
