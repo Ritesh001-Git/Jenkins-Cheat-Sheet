@@ -19,6 +19,28 @@ Regardless of the tool you use, the "Universal Workflow" follows these steps:
 - Test: Automated scripts run to ensure the new code didn't break anything (Unit, Integration, and UI tests).
 - Release/Deploy: The "Artifact" (the finished product) is moved to a server where users can access it.
 
+### The High-Level CI/CD Architecture
+The architecture is divided into four main stages. Think of this as the "Universal Workflow" in action:
+
+#### Source Stage (The Trigger):
+
+- Developers push code to Git (GitHub/GitLab).
+- Jenkins is connected to Git via a Webhook. As soon as a "Push" happens, Git sends a signal to Jenkins: "Hey, there's new code. Start the engine."
+
+#### Build Stage (The Factory):
+
+- Jenkins pulls the code into a Workspace.
+- It uses tools like Maven (for Java) or npm (for Node.js) to compile the code and download dependencies.
+- Goal: Create an Artifact (a .jar file or a Docker Image).
+
+#### Test Stage (The Quality Gate):
+
+- Jenkins runs automated tests. If a single test fails, the "Build" is marked as FAILED, and the pipeline stops immediately. This prevents broken code from moving forward.
+
+#### Deploy Stage (The Delivery):
+
+- The successful artifact is pushed to a registry (like Docker Hub or AWS ECR) and then deployed to a server (like an EC2 instance or a Kubernetes cluster).
+
 ## What is Jenkins and why are we using it?
 
 Jenkins is an open-source automation server that automates various stages of the software development lifecycle. It supports building, testing, and deploying applications across multiple environments, making it a critical component in CI/CD pipelines.
