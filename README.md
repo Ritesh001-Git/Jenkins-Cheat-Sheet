@@ -35,3 +35,9 @@ Jenkins doesn't usually "do" the work itself; it commands other tools to do it. 
 - The Command: Jenkins tells Maven or Gradle to "Build the project."
 - The Verification: Jenkins tells JUnit or Selenium to "Run the tests."
 - The Shipment: Jenkins tells Docker or Ansible to "Deploy this to the cloud.
+
+## Internal Logic: Master and Agents
+To handle heavy workloads, Jenkins uses a Distributed Architecture:
+
+- Master (The Brain): Handles the GUI, keeps track of configurations, and schedules jobs.
+- Agents (The Muscle): These are separate machines (or containers) that actually run the heavy build/test tasks. This keeps the Master from crashing when 100 people are building at once.
