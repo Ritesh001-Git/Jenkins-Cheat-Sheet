@@ -58,8 +58,33 @@ Jenkins doesn't usually "do" the work itself; it commands other tools to do it. 
 - The Verification: Jenkins tells JUnit or Selenium to "Run the tests."
 - The Shipment: Jenkins tells Docker or Ansible to "Deploy this to the cloud.
 
-## Internal Logic: Master and Agents
-To handle heavy workloads, Jenkins uses a Distributed Architecture:
+### Jenkins Internal Architecture (Master-Agent)
+Jenkins does not usually run these builds on the same server where the UI is hosted. Doing so would crash the system during heavy tasks. Instead, it uses a Distributed Architecture.
 
-- Master (The Brain): Handles the GUI, keeps track of configurations, and schedules jobs.
-- Agents (The Muscle): These are separate machines (or containers) that actually run the heavy build/test tasks. This keeps the Master from crashing when 100 people are building at once.
+#### The Jenkins Master (The Brain)
+The Master is the central "Control Tower." Its jobs include:
+
+- Scheduling: Deciding which job runs when.
+- Dispatching: Sending the build instructions to an available Agent.
+- Monitoring: Watching the Agents to see if they are healthy.
+- Recording: Saving the logs and build history.
+
+#### The Jenkins Agents (The Muscle)
+Agents are separate machines (Linux, macOS, or Windows) or Docker Containers that do the actual "heavy lifting."
+
+- They receive commands from the Master.
+- They execute the shell scripts or build commands.
+ -Once the task is done, they send the results back to the Master and wait for the next task.
+
+### The "In-Depth" Internal Working
+When a build starts, here is the technical sequence of events:
+
+- The Request: A trigger hits the Master.
+- The Allocation: The Master looks at its "Executors." If you have a MacBook and a Linux server connected as Agents, the Master decides which one is best suited for the task.
+- Remoting: The Master communicates with the Agent via the Jenkins Remoting Protocol (usually over SSH or JNLP).
+- The Workspace: The Agent creates a temporary folder. It clones the Git repository here.
+- The Execution:
+  - If you are using a Jenkinsfile, the Master reads the "Stages" (Build -> Test -> Deploy).
+  - It sends these commands one by one to the Agent.
+- The Feedback Loop: As the Agent runs a command (e.g., docker build), it streams the console output back to the Master in real-time so you can watch it in your browser.
+- Clean up: Once finished, the Agent stays online, but the Workspace is either cleared or saved for the next incremental build.
